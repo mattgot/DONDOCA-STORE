@@ -1,34 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, FlatList } from 'react-native';
-import styles from './styles/styles';
+// App.js
 
-// Dados simulados
-const produtos = [
-  { id: '1', nome: 'Cadeira de Escritório' },
-  { id: '2', nome: 'Mesa de Madeira' },
-  { id: '3', nome: 'Armário de Aço' },
-  { id: '4', nome: 'Estante Pequena' },
-  { id: '5', nome: 'Sofá 2 Lugares' },
-];
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { SQLiteProvider } from 'expo-sqlite';
+import { initializeDatabase } from './database/initializeDatabase';
+
+import HomeScreen from './pages/HomeScreen';
+import { PlatformColor } from 'react-native';
+// importa outras telas como DetailsScreen se quiser
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Produtos em estoque</Text>
-
-      <FlatList
-        data={produtos}
-        keyExtractor={(item) => item.id}
-        style={styles.lista}
-        renderItem={({ item }) => (
-          <View style={styles.linha}>
-            <Text style={styles.produto}>{item.nome}</Text>
-          </View>
-        )}
-      />
-
-      <StatusBar style="auto" />
-    </View>
+    <SQLiteProvider databaseName="DONDOCA-STORE.db" onInit={initializeDatabase}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Estoque Dondoca" component={HomeScreen} />
+          {/* <Stack.Screen name="Details" component={DetailsScreen} /> */}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SQLiteProvider>
   );
 }
-
