@@ -66,7 +66,7 @@ export default function SecondScreen() {
     navigation.goBack();
   }
 
-
+  // função para remover produto (Necessário Correção)
   async function handleDelete() {
     Alert.alert(
       "Remover Produto",
@@ -111,9 +111,9 @@ export default function SecondScreen() {
       {id !== "" && (
         <TouchableOpacity
           onPress={handleDelete}
-          style={[styles.button, { borderColor: "red" }]}
+          style={[styles.buttonDelete, { borderColor: "red" }]}
         >
-          <Text style={[styles.buttonText, { color: "red" }]}>
+          <Text style={[styles.buttonText, { color: "white" }]}>
             Excluir Produto
           </Text>
         </TouchableOpacity>
@@ -127,19 +127,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 32,
     gap: 16,
-    backgroundColor: "pink",
+    backgroundColor: "#f8f8f8",
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: "#ff69b4",
     padding: 12,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "pink",
+    borderColor: "#ff69b4",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonDelete: {
+    backgroundColor: "red",
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#ff69b4",
     alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: "pink",
+    color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },

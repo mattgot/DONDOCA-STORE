@@ -42,6 +42,7 @@ export default function HomeScreen({ navigation }: Props) {
     setProducts(response);
   }
 
+  // função para remover produto (Necessário Correção)
   async function handleDelete(productId: number) {
     Alert.alert(
       "Remover Produto",
@@ -64,7 +65,7 @@ export default function HomeScreen({ navigation }: Props) {
   }
 
   function handleOpenEdit(product: ProductType) {
-    navigation.navigate("CadastroProduto", { product });
+    navigation.navigate("Cadastrar Produto", { product });
   }
 
   useEffect(() => {
@@ -104,10 +105,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 32,
     gap: 16,
-    backgroundColor: "pink",
+    backgroundColor: "#f2f2f2",
   },
   updateButton: {
-    backgroundColor: "#fff",
+    backgroundColor: "#ff69b4",
     borderWidth: 1,
     borderColor: "#ff69b4",
     paddingVertical: 10,
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   updateText: {
-    color: "#ff69b4",
+    color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
