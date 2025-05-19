@@ -29,7 +29,7 @@ export default function SecondScreen() {
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
-  const [unitPrice, setUnitPrice] = useState<string>("");
+  const [unitPrice, setUnitPrice] = useState<number>(0);
 
   const nameRef = useRef<TextInput>(null);
 
@@ -43,7 +43,7 @@ export default function SecondScreen() {
       setId(String(id));
       setName(name);
       setQuantity(String(quantity));
-      setUnitPrice((unitPrice || 0).toFixed(2).replace(".", ","));
+      setUnitPrice(unitPrice ?? 0);
     }
   }, [route.params]);
 
@@ -51,24 +51,20 @@ export default function SecondScreen() {
     setId("");
     setName("");
     setQuantity("");
-    setUnitPrice("");
+    setUnitPrice(0);
     nameRef.current?.focus();
   }
 
   async function handleSave() {
     if (!name.trim()) return Alert.alert("Nome obrigatório!");
     if (isNaN(Number(quantity))) return Alert.alert("Quantidade inválida!");
-
-    const cleaned = unitPrice.replace(/\D/g, "");
-    const priceParsed = parseFloat(cleaned) / 100;
-
-    if (isNaN(priceParsed) || priceParsed <= 0)
+    if (isNaN(unitPrice) || unitPrice <= 0)
       return Alert.alert("Preço unitário inválido!");
 
     const productData = {
       name,
       quantity: Number(quantity),
-      unitPrice: priceParsed,
+      unitPrice: unitPrice,
     };
 
     console.log("Salvando produto:", { id, ...productData });
@@ -140,8 +136,8 @@ export default function SecondScreen() {
       <Input
         placeholder="Preço Unitário (R$)"
         value={unitPrice}
-        onChangeText={setUnitPrice}
         isCurrency
+        onValueChange={setUnitPrice}
       />
 
       <TouchableOpacity onPress={handleSave} style={styles.button}>
