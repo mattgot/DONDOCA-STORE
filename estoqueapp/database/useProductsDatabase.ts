@@ -104,14 +104,24 @@ export function useProductsDatabase() {
     }
   }
 
-  // Deletar produto
-  async function remove(id: number): Promise<void> {
-    try {
-      await database.execAsync("DELETE FROM products WHERE id = ?", [id]);
-    } catch (error) {
-      throw error;
+// Deletar produto(corrijida)
+async function remove(id: number): Promise<void> {
+  const statement = await database.prepareAsync(
+    "DELETE FROM products WHERE id = $id"
+  );
+
+  try {
+    const result = await statement.executeAsync({ $id: id });
+       if ((result as any)?.rowsAffected === 0) {
+      throw new Error(`Nenhum produto encontrado com o ID ${id}.`);
     }
+  } catch (error) {
+    console.error("Erro ao remover produto:", error);
+    throw new Error("Erro ao remover o produto do banco de dados.");
+  } finally {
+    await statement.finalizeAsync();
   }
+}
 
   // Buscar produto por ID
   async function show(id: number): Promise<Product | undefined> {
