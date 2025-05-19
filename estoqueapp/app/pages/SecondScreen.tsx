@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Alert, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 import { Input } from "@components/Input";
 import { useProductsDatabase } from "@db/useProductsDatabase";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
@@ -9,6 +16,7 @@ type ProductType = {
   id: number;
   name: string;
   quantity: number;
+  unitPrice: number;
 };
 
 type RootStackParamList = {
@@ -21,6 +29,9 @@ export default function SecondScreen() {
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
+  const [unitPrice, setUnitPrice] = useState<string>("");
+
+  const nameRef = useRef<TextInput>(null);
 
   const route = useRoute<CadastroProdutoRouteProp>();
   const navigation = useNavigation();
@@ -28,96 +39,124 @@ export default function SecondScreen() {
 
   useEffect(() => {
     if (route.params?.product) {
-      const { id, name, quantity } = route.params.product;
+      const { id, name, quantity, unitPrice } = route.params.product;
       setId(String(id));
       setName(name);
       setQuantity(String(quantity));
+      setUnitPrice((unitPrice || 0).toFixed(2).replace(".", ","));
     }
   }, [route.params]);
+
+  function resetForm() {
+    setId("");
+    setName("");
+    setQuantity("");
+    setUnitPrice("");
+    nameRef.current?.focus();
+  }
 
   async function handleSave() {
     if (!name.trim()) return Alert.alert("Nome obrigatório!");
     if (isNaN(Number(quantity))) return Alert.alert("Quantidade inválida!");
 
-    if (id) {
-      await productDatabase.update({
-        id: Number(id),
-        name,
-        quantity: Number(quantity),
-      });
-      Toast.show("Produto atualizado com sucesso!", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-      });
-    } else {
-      const response = await productDatabase.create({
-        name,
-        quantity: Number(quantity),
-      });
-      Toast.show("Produto criado com ID: " + response.insertedRowId, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-      });
-    }
+    const cleaned = unitPrice.replace(/\D/g, "");
+    const priceParsed = parseFloat(cleaned) / 100;
 
-    setId("");
-    setName("");
-    setQuantity("");
-    navigation.goBack();
+    if (isNaN(priceParsed) || priceParsed <= 0)
+      return Alert.alert("Preço unitário inválido!");
+
+    const productData = {
+      name,
+      quantity: Number(quantity),
+      unitPrice: priceParsed,
+    };
+
+    console.log("Salvando produto:", { id, ...productData });
+
+    try {
+      if (id) {
+        await productDatabase.update({ id: Number(id), ...productData });
+        Toast.show("Produto atualizado com sucesso!", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+        });
+      } else {
+        const response = await productDatabase.create(productData);
+        Toast.show("Produto criado com ID: " + response.insertedRowId, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+        });
+      }
+
+      resetForm();
+
+      setTimeout(() => {
+        navigation.goBack();
+      }, 500);
+    } catch (error: any) {
+      console.error("Erro ao salvar produto:", error);
+      Alert.alert("Erro ao salvar produto:", error.message || "Erro desconhecido.");
+    }
   }
 
-  // função para remover produto (Necessário Correção)
   async function handleDelete() {
-    Alert.alert(
-      "Remover Produto",
-      "Tem certeza que deseja excluir este produto?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: async () => {
+    Alert.alert("Remover Produto", "Tem certeza que deseja excluir este produto?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: async () => {
+          try {
             await productDatabase.remove(Number(id));
             Toast.show("Produto excluído com sucesso!", {
               duration: Toast.durations.SHORT,
               position: Toast.positions.BOTTOM,
             });
-            setId("");
-            setName("");
-            setQuantity("");
-            navigation.goBack();
-          },
+            resetForm();
+            setTimeout(() => navigation.goBack(), 400);
+          } catch (error: any) {
+            console.error("Erro ao excluir produto:", error);
+            Alert.alert("Erro ao excluir produto:", error.message);
+          }
         },
-      ]
-    );
+      },
+    ]);
   }
 
   return (
     <View style={styles.container}>
-      <Input placeholder="Nome" onChangeText={setName} value={name} />
+      <Input
+        placeholder="Nome"
+        onChangeText={setName}
+        value={name}
+        ref={nameRef}
+      />
       <Input
         placeholder="Quantidade"
         onChangeText={setQuantity}
         value={quantity}
         keyboardType="numeric"
       />
+      <Input
+        placeholder="Preço Unitário (R$)"
+        value={unitPrice}
+        onChangeText={setUnitPrice}
+        isCurrency
+      />
 
       <TouchableOpacity onPress={handleSave} style={styles.button}>
-        <Text style={styles.buttonText}>
-          {id ? "Atualizar" : "Salvar"}
-        </Text>
+        <Text style={styles.buttonText}>{id ? "Atualizar" : "Salvar"}</Text>
       </TouchableOpacity>
 
       {id !== "" && (
-        <TouchableOpacity
-          onPress={handleDelete}
-          style={[styles.buttonDelete, { borderColor: "red" }]}
-        >
-          <Text style={[styles.buttonText, { color: "white" }]}>
-            Excluir Produto
-          </Text>
+        <TouchableOpacity onPress={handleDelete} style={styles.buttonDelete}>
+          <Text style={styles.buttonText}>Excluir Produto</Text>
         </TouchableOpacity>
       )}
+
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>← Voltar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -143,7 +182,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "#ff69b4",
+    borderColor: "red",
     alignItems: "center",
     marginTop: 10,
   },
@@ -151,5 +190,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  backButton: {
+    marginTop: 20,
+    alignSelf: "center",
+  },
+  backButtonText: {
+    color: "#555",
+    fontSize: 16,
   },
 });

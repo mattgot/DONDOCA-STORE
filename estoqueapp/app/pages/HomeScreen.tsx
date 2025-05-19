@@ -1,6 +1,4 @@
-// ✅ Nova versão da HomeScreen.tsx que apenas lista, atualiza e permite edição/exclusão
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Alert,
@@ -8,7 +6,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Image,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+import { useFocusEffect } from "@react-navigation/native";
 import { useProductsDatabase } from "@db/useProductsDatabase";
 import { Input } from "@components/Input";
 import { Product } from "@components/Product";
@@ -20,6 +22,7 @@ type ProductType = {
   id: number;
   name: string;
   quantity: number;
+  unitPrice: number;
 };
 
 type RootStackParamList = {
@@ -34,15 +37,38 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
   const [search, setSearch] = useState<string>("");
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [username, setUsername] = useState<string>("");
+  const [logoUri, setLogoUri] = useState<string | null>(null);
 
   const productDatabase = useProductsDatabase();
 
   async function list() {
     const response = await productDatabase.searchByName(search);
     setProducts(response);
+    notifyLowStock(response);
   }
 
-  // função para remover produto (Necessário Correção)
+  async function loadSettings() {
+    const name = await AsyncStorage.getItem("username");
+    const logo = await AsyncStorage.getItem("logo");
+    if (name) setUsername(name);
+    if (logo) setLogoUri(logo);
+  }
+
+  async function notifyLowStock(products: ProductType[]) {
+    const hasLowStock = products.some(p => p.quantity < 5);
+    const enabled = await AsyncStorage.getItem("notifications");
+    if (hasLowStock && enabled === 'true') {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Atenção!",
+          body: "Existem produtos com estoque baixo.",
+        },
+        trigger: null,
+      });
+    }
+  }
+
   async function handleDelete(productId: number) {
     Alert.alert(
       "Remover Produto",
@@ -68,12 +94,20 @@ export default function HomeScreen({ navigation }: Props) {
     navigation.navigate("Cadastrar Produto", { product });
   }
 
-  useEffect(() => {
-    list();
-  }, [search]);
+  useFocusEffect(
+    useCallback(() => {
+      list();
+      loadSettings();
+    }, [search])
+  );
 
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <Text style={styles.greeting}>Olá{username ? ", " + username : ""}!</Text>
+        {logoUri && <Image source={{ uri: logoUri }} style={styles.logo} />}
+      </View>
+
       <Input
         placeholder="Pesquisar"
         value={search}
@@ -106,6 +140,21 @@ const styles = StyleSheet.create({
     padding: 32,
     gap: 16,
     backgroundColor: "#f2f2f2",
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  greeting: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
   },
   updateButton: {
     backgroundColor: "#ff69b4",

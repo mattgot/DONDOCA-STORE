@@ -1,5 +1,3 @@
-// ./components/Product.tsx
-
 import React from "react";
 import {
   Text,
@@ -8,15 +6,24 @@ import {
   ViewStyle,
   GestureResponderEvent,
   View,
+  LayoutAnimation,
+  UIManager,
+  Platform,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Swipeable } from "react-native-gesture-handler";
+
+// Habilitar LayoutAnimation no Android
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 // Tipagem dos dados do produto
 type ProductData = {
   id: number;
   name: string;
   quantity: number;
+  unitPrice: number;
 };
 
 // Tipagem das props do componente
@@ -29,10 +36,17 @@ type ProductProps = {
 
 export function Product({ data, onDelete, onOpen, style }: ProductProps) {
   const isInStock = data.quantity > 0;
+  const isLowStock = data.quantity < 5;
 
   const renderRightActions = () => (
     <View style={styles.actions}>
-      <TouchableOpacity onPress={onDelete} style={styles.actionButton}>
+      <TouchableOpacity
+        onPress={(event) => {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          onDelete?.(event);
+        }}
+        style={styles.actionButton}
+      >
         <MaterialIcons name="delete" size={24} color="#fff" />
       </TouchableOpacity>
       <TouchableOpacity onPress={onOpen} style={styles.actionButtonAlt}>
@@ -52,13 +66,36 @@ export function Product({ data, onDelete, onOpen, style }: ProductProps) {
               color={isInStock ? "#27ae60" : "#e74c3c"}
               style={{ marginRight: 6 }}
             />
-            <Text style={styles.title}>
+            <Text
+              testID={`product-name-${data.id}`}
+              style={styles.title}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {data.name} - {data.quantity} unidades
             </Text>
           </View>
+
           <Text style={styles.statusText}>
             {isInStock ? "Em estoque" : "Fora de estoque"}
           </Text>
+
+          {isLowStock && (
+            <Text style={styles.lowStockText}>Estoque baixo!</Text>
+          )}
+
+          <Text style={styles.priceText}>
+            Preço unitário: R$ {(data.unitPrice ?? 0).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}
+          </Text>
+
+          <Text style={styles.totalText}>
+            Total: R$ {((data.unitPrice ?? 0) * (data.quantity ?? 0)).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}
+          </Text>
+
         </View>
       </View>
     </Swipeable>
@@ -95,6 +132,22 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 13,
     color: "#888",
+  },
+  lowStockText: {
+    fontSize: 12,
+    color: "#e67e22",
+    marginTop: 2,
+  },
+  priceText: {
+    fontSize: 13,
+    color: "#555",
+    marginTop: 4,
+  },
+  totalText: {
+    fontSize: 13,
+    color: "#000",
+    fontWeight: "bold",
+    marginTop: 2,
   },
   actions: {
     flexDirection: "row",
