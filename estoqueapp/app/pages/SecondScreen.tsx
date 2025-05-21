@@ -9,14 +9,17 @@ import {
 } from "react-native";
 import { Input } from "@components/Input";
 import { useProductsDatabase } from "@db/useProductsDatabase";
+import { useCategoriesDatabase } from "@db/useCategoriesDatabase";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
+import { Picker } from "@react-native-picker/picker";
 
 type ProductType = {
   id: number;
   name: string;
   quantity: number;
   unitPrice: number;
+  categoryId?: number;
 };
 
 type RootStackParamList = {
@@ -30,28 +33,43 @@ export default function SecondScreen() {
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
   const [unitPrice, setUnitPrice] = useState<number>(0);
+  const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
+  const [categorias, setCategorias] = useState([]);
 
   const nameRef = useRef<TextInput>(null);
 
   const route = useRoute<CadastroProdutoRouteProp>();
   const navigation = useNavigation();
+
   const productDatabase = useProductsDatabase();
+  const { listCategories } = useCategoriesDatabase();
 
   useEffect(() => {
     if (route.params?.product) {
-      const { id, name, quantity, unitPrice } = route.params.product;
+      const { id, name, quantity, unitPrice, categoryId } = route.params.product;
       setId(String(id));
       setName(name);
       setQuantity(String(quantity));
       setUnitPrice(unitPrice ?? 0);
+      setCategoryId(categoryId); 
     }
   }, [route.params]);
+
+  useEffect(() => {
+    async function carregarCategorias() {
+      const lista = await listCategories();
+      setCategorias(lista);
+    }
+
+    carregarCategorias();
+  }, []);
 
   function resetForm() {
     setId("");
     setName("");
     setQuantity("");
     setUnitPrice(0);
+    setCategoryId(undefined);
     nameRef.current?.focus();
   }
 
@@ -65,6 +83,7 @@ export default function SecondScreen() {
       name,
       quantity: Number(quantity),
       unitPrice: unitPrice,
+      categoryId,
     };
 
     console.log("Salvando produto:", { id, ...productData });
@@ -85,10 +104,7 @@ export default function SecondScreen() {
       }
 
       resetForm();
-
-      setTimeout(() => {
-        navigation.goBack();
-      }, 500);
+      setTimeout(() => navigation.goBack(), 500);
     } catch (error: any) {
       console.error("Erro ao salvar produto:", error);
       Alert.alert("Erro ao salvar produto:", error.message || "Erro desconhecido.");
@@ -140,6 +156,22 @@ export default function SecondScreen() {
         onValueChange={setUnitPrice}
       />
 
+      <Text style={styles.label}>Categoria</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={categoryId ?? 0}
+          onValueChange={(itemValue) => {
+            setCategoryId(itemValue === 0 ? undefined : itemValue);
+          }}
+        >
+          <Picker.Item label="Selecione uma categoria" value={0} />
+          {categorias.map((cat) => (
+            <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
+          ))}
+        </Picker>
+      </View>
+
+
       <TouchableOpacity onPress={handleSave} style={styles.button}>
         <Text style={styles.buttonText}>{id ? "Atualizar" : "Salvar"}</Text>
       </TouchableOpacity>
@@ -163,6 +195,16 @@ const styles = StyleSheet.create({
     padding: 32,
     gap: 16,
     backgroundColor: "#f8f8f8",
+  },
+  label: {
+    fontWeight: "bold",
+    marginTop: 8,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    marginBottom: 8,
   },
   button: {
     backgroundColor: "#ff69b4",

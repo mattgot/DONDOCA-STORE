@@ -9,7 +9,7 @@ import {
 
 type InputProps = TextInputProps & {
   isCurrency?: boolean;
-  onValueChange?: (value: number) => void; // valor numérico limpo
+  onValueChange?: (value: number) => void;
 };
 
 export function Input({

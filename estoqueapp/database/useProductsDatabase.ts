@@ -159,6 +159,18 @@ export function useProductsDatabase() {
     }
   }
 
+  //Faz as junções da categoria
+  async function listWithCategory(): Promise<Product[]> {
+    const query = `
+      SELECT products.*, categories.name AS categoryName
+      FROM products
+      LEFT JOIN categories ON products.categoryId = categories.id
+    `;
+    const result = await database.getAllAsync(query);
+    return result as Product[];
+  }
+  
+
   return {
     create,
     searchByName,
@@ -168,5 +180,6 @@ export function useProductsDatabase() {
     remove,
     show,
     getTotalStockValue,
+    listWithCategory,
   };
 }

@@ -12,17 +12,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from "@react-navigation/native";
 import { useProductsDatabase } from "@db/useProductsDatabase";
+import { useCategoriesDatabase } from "@db/useCategoriesDatabase";
 import { Input } from "@components/Input";
 import { Product } from "@components/Product";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 // Tipagens
-
 type ProductType = {
   id: number;
   name: string;
   quantity: number;
   unitPrice: number;
+  categoryId?: number;
+};
+
+type CategoryType = {
+  id: number;
+  name: string;
 };
 
 type RootStackParamList = {
@@ -37,10 +43,12 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
   const [search, setSearch] = useState<string>("");
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [username, setUsername] = useState<string>("");
   const [logoUri, setLogoUri] = useState<string | null>(null);
 
   const productDatabase = useProductsDatabase();
+  const { listCategories } = useCategoriesDatabase();
 
   async function list() {
     const response = await productDatabase.searchByName(search);
@@ -53,6 +61,9 @@ export default function HomeScreen({ navigation }: Props) {
     const logo = await AsyncStorage.getItem("logo");
     if (name) setUsername(name);
     if (logo) setLogoUri(logo);
+
+    const catList = await listCategories();
+    setCategories(catList);
   }
 
   async function notifyLowStock(products: ProductType[]) {
@@ -74,10 +85,7 @@ export default function HomeScreen({ navigation }: Props) {
       "Remover Produto",
       "Tem certeza que deseja excluir este produto?",
       [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
+        { text: "Cancelar", style: "cancel" },
         {
           text: "Confirmar",
           style: "destructive",
@@ -91,13 +99,21 @@ export default function HomeScreen({ navigation }: Props) {
   }
 
   function handleOpenEdit(product: ProductType) {
-    navigation.navigate("Cadastrar Produto", { product });
+    navigation.navigate("CadastroProduto", { product });
+  }
+
+  function getCategoryName(categoryId?: number) {
+    const category = categories.find((cat) => cat.id === categoryId);
+    return category ? category.name : "Sem categoria";
   }
 
   useFocusEffect(
     useCallback(() => {
-      list();
-      loadSettings();
+      const loadAll = async () => {
+        await loadSettings();
+        await list();
+      };
+      loadAll();
     }, [search])
   );
 
@@ -123,7 +139,10 @@ export default function HomeScreen({ navigation }: Props) {
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
           <Product
-            data={item}
+            data={{
+              ...item,
+              categoryName: getCategoryName(item.categoryId) 
+            }}
             onDelete={() => handleDelete(item.id)}
             onOpen={() => handleOpenEdit(item)}
           />

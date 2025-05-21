@@ -24,6 +24,7 @@ type ProductData = {
   name: string;
   quantity: number;
   unitPrice: number;
+  categoryName?: string; 
 };
 
 // Tipagem das props do componente
@@ -96,6 +97,11 @@ export function Product({ data, onDelete, onOpen, style }: ProductProps) {
             })}
           </Text>
 
+          {data.categoryName && (
+            <Text style={styles.categoryText}>
+              Categoria: {data.categoryName}
+            </Text>
+          )}
         </View>
       </View>
     </Swipeable>
@@ -148,6 +154,12 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "bold",
     marginTop: 2,
+  },
+  categoryText: {
+    fontSize: 13,
+    color: "#555",
+    marginTop: 2,
+    fontStyle: "italic",
   },
   actions: {
     flexDirection: "row",
