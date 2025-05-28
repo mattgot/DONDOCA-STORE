@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { useSQLiteContext } from "expo-sqlite";
+import  styles  from '../styles/styles';
 
 export default function RestaurarBackupScreen() {
   const database = useSQLiteContext();
@@ -69,14 +70,3 @@ export default function RestaurarBackupScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: "#fff" },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 16 },
-  button: {
-    backgroundColor: "#ff69b4",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
-});

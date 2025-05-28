@@ -6,9 +6,10 @@ import {
 } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import  styles  from 'app/styles/styles_sidebar.js';
 
 // Páginas
 import CatalogoScreen from './app/pages/HomeScreen';
@@ -54,7 +55,7 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView
       {...props}
-      contentContainerStyle={{ flex: 1, justifyContent: 'space-between' }}
+      contentContainerStyle={{ flex: 1, justifyContent: 'space-between', backgroundColor:'#ff85c1' }}
     >
       <View>
         <View style={styles.drawerHeader}>
@@ -64,29 +65,33 @@ function CustomDrawerContent(props) {
 
         <DrawerItem
           label="Catálogo"
-          icon={({ color, size }) => (
-            <MaterialIcons name="inventory" color={color} size={size} />
+          labelStyle={{ color: 'white' }} // cor do texto
+          icon={({ size }) => (
+            <MaterialIcons name="inventory" color="white" size={size} /> // cor do ícone
           )}
           onPress={() => props.navigation.navigate('Catalogo')}
         />
         <DrawerItem
           label="Clientes"
-          icon={({ color, size }) => (
-            <MaterialIcons name="people" color={color} size={size} />
+          labelStyle={{ color: 'white' }}
+          icon={({ size }) => (
+            <MaterialIcons name="people" color="white" size={size} />
           )}
           onPress={() => props.navigation.navigate('Clientes')}
         />
         <DrawerItem
           label="Estoque"
+          labelStyle={{ color: 'white' }}
           icon={({ color, size }) => (
-            <MaterialIcons name="insights" color={color} size={size} />
+            <MaterialIcons name="insights" color='white' size={size} />
           )}
           onPress={() => props.navigation.navigate('Estoque')}
         />
         <DrawerItem
           label="Cadastros"
+          labelStyle={{ color: 'white' }}
           icon={({ color, size }) => (
-            <MaterialIcons name="playlist-add-check" color={color} size={size} />
+            <MaterialIcons name="playlist-add-check" color='white' size={size} />
           )}
           onPress={() => props.navigation.navigate('Cadastros')}
         />
@@ -95,15 +100,17 @@ function CustomDrawerContent(props) {
       <View>
         <DrawerItem
           label="Configurações"
+          labelStyle={{ color: 'white' }}
           icon={({ color, size }) => (
-            <MaterialIcons name="settings" color={color} size={size} />
+            <MaterialIcons name="settings" color='white' size={size} />
           )}
           onPress={() => props.navigation.navigate('Configuracoes')}
         />
         <DrawerItem
           label="Logout"
+          labelStyle={{ color: 'white' }}
           icon={({ color, size }) => (
-            <MaterialIcons name="logout" color={color} size={size} />
+            <MaterialIcons name="logout" color='white' size={size} />
           )}
           onPress={handleLogout}
         />
@@ -158,22 +165,3 @@ export default function RootNavigation() {
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerHeader: {
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 24,
-  },
-  drawerLogo: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  drawerUser: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-});

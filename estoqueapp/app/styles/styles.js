@@ -4,9 +4,13 @@ const styles = StyleSheet.create({
   // Container principal
   container: {
     flex: 1,
-    backgroundColor: '#ffe4ec', // rosa claro
+    backgroundColor: '#fff88', 
     paddingTop: 60,
     paddingHorizontal: 20,
+  },
+
+  text: {
+    color: 'white',
   },
 
   // Título da tela
@@ -65,6 +69,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  greeting: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ff69b4",
+    padding: 15,
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+  },
+  updateButton: {
+    backgroundColor: "#ff69b4",
+    borderWidth: 1,
+    borderColor: "#ff69b4",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  updateText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
+
 
 export default styles;

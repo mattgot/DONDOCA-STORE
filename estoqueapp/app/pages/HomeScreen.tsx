@@ -16,6 +16,7 @@ import { useCategoriesDatabase } from "@db/useCategoriesDatabase";
 import { Input } from "@components/Input";
 import { Product } from "@components/Product";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import  styles  from '../styles/styles';
 
 // Tipagens
 type ProductType = {
@@ -151,42 +152,4 @@ export default function HomeScreen({ navigation }: Props) {
       />
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 32,
-    gap: 16,
-    backgroundColor: "#f2f2f2",
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  greeting: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  logo: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-  },
-  updateButton: {
-    backgroundColor: "#ff69b4",
-    borderWidth: 1,
-    borderColor: "#ff69b4",
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  updateText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
+};
