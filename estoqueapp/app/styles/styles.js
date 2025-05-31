@@ -101,6 +101,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 8,
+    marginTop: 4,
+    borderRadius: 4,
+  },
+
+  inputGroup: { flexDirection: "row", gap: 8, alignItems: "center", marginBottom: 16 },
+
+  denied: {
+    textAlign: 'center',
+    color: 'red',
+    fontSize: 16,
+  },
+
+  editBtn: { padding: 6 },
+  deleteBtn: { padding: 6 },
+  editText: { color: "blue" },
+  deleteText: { color: "red" },
+
+  label: { marginTop: 12, fontWeight: "bold" },
 });
 
 

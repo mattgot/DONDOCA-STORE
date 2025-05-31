@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useClientsDatabase } from "@db/useClientsDatabase";
+import  styles  from '../styles/styles.js';
 
 export default function CadastroClienteScreen() {
   const { createClient } = useClientsDatabase();
@@ -43,19 +45,9 @@ export default function CadastroClienteScreen() {
       <Text style={styles.label}>Endereço</Text>
       <TextInput style={styles.input} value={address} onChangeText={setAddress} />
 
-      <Button title="Salvar Cliente" onPress={handleSalvar} />
+      <TouchableOpacity style={styles.button} onPress={handleSalvar}>
+        <Text style={styles.buttonText}>Salvar Cliente</Text>
+      </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { padding: 16 },
-  label: { marginTop: 12, fontWeight: "bold" },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    marginTop: 4,
-    borderRadius: 4,
-  },
-});
