@@ -4,7 +4,6 @@ import {
   Text,
   Alert,
   TouchableOpacity,
-  StyleSheet,
   TextInput,
 } from "react-native";
 import { Input } from "@components/Input";
@@ -13,6 +12,7 @@ import { useCategoriesDatabase } from "@db/useCategoriesDatabase";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { Picker } from "@react-native-picker/picker";
+import  styles  from '../styles/styles.js';
 
 type ProductType = {
   id: number;
@@ -157,7 +157,7 @@ export default function SecondScreen() {
       />
 
       <Text style={styles.label}>Categoria</Text>
-      <View style={styles.pickerContainer}>
+      <View style={styles.container}>
         <Picker
           selectedValue={categoryId ?? 0}
           onValueChange={(itemValue) => {
@@ -177,64 +177,14 @@ export default function SecondScreen() {
       </TouchableOpacity>
 
       {id !== "" && (
-        <TouchableOpacity onPress={handleDelete} style={styles.buttonDelete}>
+        <TouchableOpacity onPress={handleDelete} style={styles.button}>
           <Text style={styles.buttonText}>Excluir Produto</Text>
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>← Voltar</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+        <Text style={styles.button}>← Voltar</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 32,
-    gap: 16,
-    backgroundColor: "#f8f8f8",
-  },
-  label: {
-    fontWeight: "bold",
-    marginTop: 8,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    marginBottom: 8,
-  },
-  button: {
-    backgroundColor: "#ff69b4",
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#ff69b4",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDelete: {
-    backgroundColor: "red",
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "red",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  backButton: {
-    marginTop: 20,
-    alignSelf: "center",
-  },
-  backButtonText: {
-    color: "#555",
-    fontSize: 16,
-  },
-});

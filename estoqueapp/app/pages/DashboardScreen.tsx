@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useProductsDatabase } from "@db/useProductsDatabase";
 import { PieChart } from "react-native-chart-kit";
+import  styles  from '../styles/styles.js';
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -72,8 +73,8 @@ export default function DashboardScreen() {
         })}</Text>
       </View>
 
-      <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Distribuição de Estoque</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Distribuição de Estoque</Text>
         <PieChart
           data={pieData}
           width={screenWidth - 48}
@@ -98,47 +99,3 @@ const chartConfig = {
     fontSize: 12,
   },
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: "#f8f8f8",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#333",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    elevation: 2,
-  },
-  chartContainer: {
-    marginTop: 20,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 8,
-    elevation: 2,
-  },
-  chartTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  label: {
-    fontSize: 16,
-    color: "#555",
-  },
-  value: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#000",
-  },
-});

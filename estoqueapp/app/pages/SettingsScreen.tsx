@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   Switch,
   TouchableOpacity,
   Image,
@@ -14,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Input } from "@components/Input";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "../hooks/useAuth"; // certifique-se que o caminho está correto
+import  styles  from '../styles/styles.js';
 
 export default function SettingsScreen() {
   const { signOut } = useAuth();
@@ -69,7 +69,7 @@ export default function SettingsScreen() {
         onChangeText={setUsername}
       />
 
-      <View style={styles.switchContainer}>
+      <View style={styles.container}>
         <Text style={styles.label}>Notificações</Text>
         <Switch
           value={notificationsEnabled}
@@ -77,19 +77,19 @@ export default function SettingsScreen() {
         />
       </View>
 
-      <View style={styles.logoContainer}>
+      <View style={styles.container}>
         {logoUri ? (
           <Image source={{ uri: logoUri }} style={styles.logo} />
         ) : (
           <Text style={styles.label}>Nenhuma logo selecionada</Text>
         )}
-        <TouchableOpacity style={styles.logoButton} onPress={pickLogo}>
-          <Text style={styles.logoButtonText}>Selecionar Logo</Text>
+        <TouchableOpacity style={styles.button} onPress={pickLogo}>
+          <Text style={styles.button}>Selecionar Logo</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Salvar Configurações</Text>
+      <TouchableOpacity style={styles.updateButton} onPress={handleSave}>
+        <Text style={styles.updateButton}>Salvar Configurações</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -102,72 +102,3 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-    backgroundColor: "#f8f8f8",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#333",
-  },
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 12,
-  },
-  label: {
-    fontSize: 16,
-    color: "#555",
-  },
-  logoContainer: {
-    marginTop: 16,
-    alignItems: "center",
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  logoButton: {
-    backgroundColor: "#ff69b4",
-    padding: 10,
-    borderRadius: 8,
-  },
-  logoButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  saveButton: {
-    backgroundColor: "#27ae60",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 24,
-  },
-  saveButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  icon: {
-    marginRight: 8,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});

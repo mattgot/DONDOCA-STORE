@@ -124,6 +124,51 @@ const styles = StyleSheet.create({
   deleteText: { color: "red" },
 
   label: { marginTop: 12, fontWeight: "bold" },
+
+  checkbox: {
+    marginBottom: 20,
+    paddingVertical: 8,
+  },
+  checked: {
+    backgroundColor: '#e6f2ff',
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: '#333',
+  },
+
+  name: { fontSize: 16, fontWeight: "bold" },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 12,
+    marginTop: 8,
+  },
+
+  actions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 12,
+    marginTop: 8,
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 2,
+  },
+
+  value: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+  },
+
+  icon: {
+    marginRight: 8,
+  },
 });
 
 

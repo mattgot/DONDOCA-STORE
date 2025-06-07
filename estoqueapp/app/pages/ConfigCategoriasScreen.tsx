@@ -5,10 +5,10 @@ import {
   TextInput,
   FlatList,
   Alert,
-  StyleSheet,
   TouchableOpacity,
 } from "react-native";
 import { useCategoriesDatabase } from "@db/useCategoriesDatabase";
+import  styles  from '../styles/styles.js';
 
 export default function ConfigCategoriasScreen() {
   const {
@@ -110,7 +110,7 @@ export default function ConfigCategoriasScreen() {
         data={categorias}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <View style ={styles.text}>
             {editandoId === item.id ? (
               <>
                 <TextInput
@@ -149,50 +149,9 @@ export default function ConfigCategoriasScreen() {
         )}
       />
 
-      <TouchableOpacity onPress={handleCriarCategoriaTeste} style={styles.testButton}>
+      <TouchableOpacity onPress={handleCriarCategoriaTeste} style={styles.button}>
         <Text style={{ color: "#666" }}>Criar categoria teste</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#fff" },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 12 },
-  inputGroup: { flexDirection: "row", gap: 8, alignItems: "center", marginBottom: 16 },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 6,
-    padding: 8,
-    backgroundColor: "#f9f9f9",
-  },
-  button: {
-    backgroundColor: "#ff69b4",
-    padding: 10,
-    borderRadius: 6,
-  },
-  buttonText: { color: "#fff", fontWeight: "bold" },
-  card: {
-    backgroundColor: "#f1f1f1",
-    padding: 12,
-    borderRadius: 6,
-    marginBottom: 10,
-  },
-  name: { fontSize: 16, fontWeight: "bold" },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: 12,
-    marginTop: 8,
-  },
-  editBtn: { padding: 6 },
-  deleteBtn: { padding: 6 },
-  editText: { color: "blue" },
-  deleteText: { color: "red" },
-  testButton: {
-    alignSelf: "center",
-    marginTop: 20,
-  },
-});

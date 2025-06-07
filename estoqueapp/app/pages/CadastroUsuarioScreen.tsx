@@ -10,6 +10,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthDatabase } from '../database/useAuthDatabase';
 import { useNavigation } from '@react-navigation/native';
+import  styles  from '../styles/styles.js';
 
 export default function CadastroUsuarioScreen() {
   const [username, setUsername] = useState('');
@@ -86,51 +87,3 @@ export default function CadastroUsuarioScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 32,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-  },
-  checkbox: {
-    marginBottom: 20,
-    paddingVertical: 8,
-  },
-  checked: {
-    backgroundColor: '#e6f2ff',
-  },
-  checkboxLabel: {
-    fontSize: 16,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#27ae60',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  denied: {
-    textAlign: 'center',
-    color: 'red',
-    fontSize: 16,
-  },
-});
