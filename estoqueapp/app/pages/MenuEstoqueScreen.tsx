@@ -6,7 +6,7 @@ import  styles  from '../styles/styles';
 
 
 type StackParamList = {
-  "Relatórios": undefined;
+  "Relatorios": undefined;
   "RestaurarBackup": undefined;
 };
 
@@ -19,10 +19,10 @@ export function MenuEstoqueScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Relatórios')}
+        onPress={() => navigation.navigate('Relatorios')}
       >
         <MaterialIcons name="insights" size={24} color="#fff" style={styles.icon} />
-        <Text style={styles.text}>Relatórios</Text>
+        <Text style={styles.text}>Relatorios</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

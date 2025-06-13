@@ -5,7 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import  styles  from '../styles/styles';
 
 type StackParamList = {
-  "Cadastrar Produto": undefined;
+  "CadastroProduto": undefined;
   "CadastroCategoria": undefined;
   "GerenciarCategorias": undefined;
 };
@@ -19,10 +19,10 @@ export function MenuCadastrosScreen() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Cadastrar Produto')}
+        onPress={() => navigation.navigate('CadastroProduto')}
       >
         <MaterialIcons name="add-box" size={24} color="#fff" style={styles.icon} />
-        <Text style={styles.text}>Cadastrar Produto</Text>
+        <Text style={styles.text}>CadastroProduto</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

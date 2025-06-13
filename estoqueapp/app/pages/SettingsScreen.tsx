@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Input } from "@components/Input";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useAuth } from "../hooks/useAuth"; // certifique-se que o caminho está correto
+import { useAuth } from "../hooks/useAuth";
 import  styles  from '../styles/styles.js';
 
 export default function SettingsScreen() {
